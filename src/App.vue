@@ -1,17 +1,23 @@
 <template>
   <header><h1>My Friends</h1></header>
   <ul>
+    <new-friend @add-friend="addContact"></new-friend>
+
     <friend-contact
       v-for="friend in friends"
       :friend="friend"
-      v-bind:key="friend.id"
+      :key="friend.id"
+      @toggle-favorite="toggleFavoriteStatus"
+      @delete="deleteContact"
     ></friend-contact>
   </ul>
 </template>
 <script>
 import FriendContact from "./components/FriendContact.vue";
+import NewFriend from "./components/NewFriend.vue";
+
 export default {
-  components: { FriendContact },
+  components: { FriendContact, NewFriend },
   data() {
     return {
       friends: [
@@ -20,15 +26,38 @@ export default {
           name: "xx xx",
           phone: "123",
           email: "s@w.com",
+          isFavorite: false,
         },
         {
           id: 2,
           name: "yy yy",
           phone: "324",
           email: "z@e.com",
+          isFavorite: true,
         },
       ],
     };
+  },
+  methods: {
+    toggleFavoriteStatus(id) {
+      const f = this.friends.find((friend) => friend.id == id);
+      f.isFavorite = !f.isFavorite;
+    },
+    addContact(name, phone, email){
+      const newFriendContact = {
+        id: new Date().toISOString(),
+        name,
+        phone,
+        email,
+        isFavorite: false
+      }
+
+      this.friends.unshift(newFriendContact);
+
+    },
+    deleteContact(id){
+      this.friends = this.friends.filter(friend => friend.id !== id)
+    }
   },
 };
 </script>
@@ -64,7 +93,7 @@ header {
   list-style: none;
 }
 
-#app li {
+#app li, #app form {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   margin: 1rem auto;
   border-radius: 10px;
