@@ -1,4 +1,7 @@
-# hello-world
+# hello-vue
+A simple hello world vue project
+
+<img src="./screenshot.png" alt="screenshot" />
 
 ## Project setup
 ```
